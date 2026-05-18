@@ -1,11 +1,12 @@
-import { Controller, Get, Query, Param, Post, Body } from '@nestjs/common';
+import { Controller, Get, Query, Param, Post, Body, Put } from '@nestjs/common';
 import { CreateProfileDto } from './dto/create-profile';
+import { UpdateProfileDto } from './dto/update-profile';
 
 @Controller('profiles') //decorator -> higher order function
 export class ProfilesController {
     // GET /profiles
     @Get()
-    findAll(@Query('age') age:  number) {
+    findAll(@Query('age') age: number) {
         return [{ age }];
     }
 
@@ -14,13 +15,25 @@ export class ProfilesController {
     findOne(@Param('id') id: string) {
         return { id };
     }
-    
+
     // POST /profiles
     @Post()
     createProfile(@Body() createProfileDto: CreateProfileDto) {
         return {
             name: createProfileDto.name,
             description: createProfileDto.description
-        }
+        };
+    }
+
+    // PUT /profiles/:id
+    @Put(':id')
+    updateProfile(
+        @Param('id') id: string,
+        @Body() updateProfileDto: UpdateProfileDto
+    ) {
+        return {
+            id,
+            ...updateProfileDto
+        };
     }
 }
