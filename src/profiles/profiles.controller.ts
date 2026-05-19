@@ -1,44 +1,57 @@
-import { Controller, Get, Query, Param, Post, Body, Put, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Query,
+    Param,
+    Post,
+    Body,
+    Put,
+    Delete,
+    HttpCode,
+    HttpStatus,
+} from '@nestjs/common';
 import { CreateProfileDto } from './dto/create-profile';
 import { UpdateProfileDto } from './dto/update-profile';
+import { ProfilesService } from './profiles.service';
 
-@Controller('profiles') //decorator -> higher order function
+@Controller('profiles')
 export class ProfilesController {
+    constructor(private readonly profilesService: ProfilesService) { }
+
     // GET /profiles
     @Get()
-    findAll(@Query('age') age: number) {
-        return [{ age }];
+    findAll() {
+        return this.profilesService.findAll();
     }
 
     // GET /profiles/:id
     @Get(':id')
     findOne(@Param('id') id: string) {
-        return { id };
+        return this.profilesService.findOne(Number(id));
     }
 
     // POST /profiles
     @Post()
     createProfile(@Body() createProfileDto: CreateProfileDto) {
-        return {
-            name: createProfileDto.name,
-            description: createProfileDto.description
-        };
+        return this.profilesService.createProfile(createProfileDto);
     }
 
     // PUT /profiles/:id
     @Put(':id')
     updateProfile(
         @Param('id') id: string,
-        @Body() updateProfileDto: UpdateProfileDto
+        @Body() updateProfileDto: UpdateProfileDto,
     ) {
-        return {
-            id,
-            ...updateProfileDto
-        };
+        return this.profilesService.updateProfile(
+            Number(id),
+            updateProfileDto,
+        );
     }
 
     // DELETE /profiles/:id
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    deleteProfile(@Param('id') id: string) {}
+    deleteProfile(@Param('id') id: string) {
+        return this.profilesService.deleteProfile(Number(id));
+    }
 }
