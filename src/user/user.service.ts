@@ -23,14 +23,23 @@ export class UserService {
         } catch (error: unknown) {
             console.log(error);
 
-            const e = error as {code?: string};
+            const e = error as { code?: string };
             const DUPLICATE_KEY_CODE = "23505";
 
-            if(e.code === DUPLICATE_KEY_CODE) {
+            if (e.code === DUPLICATE_KEY_CODE) {
                 throw new ConflictException("Email is already taken.")
             }
 
             throw error;
         }
+    }
+
+    async findUser(email: string) {
+        const result = await this.db.query(
+            `SELECT * FROM users WHERE email = $1`,
+            [email]
+        );
+        
+        return result.rows[0];
     }
 }
