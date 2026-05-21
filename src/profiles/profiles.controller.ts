@@ -10,8 +10,8 @@ import {
     HttpCode,
     HttpStatus,
 } from '@nestjs/common';
-import { CreateProfileDto } from './dto/create-profile';
-import { UpdateProfileDto } from './dto/update-profile';
+import { CreateProfileDto } from './dto/create-profile.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfilesService } from './profiles.service';
 
 @Controller('profiles')
